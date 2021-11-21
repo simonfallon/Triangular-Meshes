@@ -1,34 +1,34 @@
 # from MetodosVisualizacion import *
-import Plot
+import tools.Plot
+from tools.Tools import readtxt2list
+from tools.Triangular import frontera
 import numpy as np
 from itertools import combinations
 from operator import itemgetter
 import scipy.optimize as op
 
-puntos = []
-for punto in list(open("ptsbunny.txt")):  # Puntos a tupla de valores p = (x,y,z)
-    pto = tuple([float(i) for i in punto.split(',')])
-    puntos.append(pto)
-
-triangulos = set()
-for tri in list(open("tbunny.txt")):  # Triangulos a tupal de puntos t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
-    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
-
-triangulosquitados = set()
+ARCHIVO1="ptsbunny.txt"
+ARCHIVO2="tbunny.txt"
 
 puntos_cent = []
 vecindades = {}
 puntos_irreg = []
 noPosibles = []
+puntos = []
 
+triangulosquitados = set()
+triangulos = set()
+
+for punto in readtxt2list(ARCHIVO1):  # Puntos a tupla de valores p = (x,y,z)
+    pto = tuple([float(i) for i in punto.split(',')])
+    puntos.append(pto)
+
+for tri in readtxt2list(ARCHIVO2):  # Triangulos a tupal de puntos t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
+    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
 
 # con pi = (xi,yi,zi)
 # Dictionario de puntos p : ({p,p1,p2...},{(p,p2,p3),(p,p3,p4)...})
 # Diccionario entra punto, sale tupla con primero, los puntos en el vecindario y en segundo indice triangulos en vecindario
-
-def frontera(punto):
-    return not len(vecindades[punto][0]) == len(vecindades[punto][1]) + 1
-
 
 def irreg(punto):
     if len(vecindades[punto][0]) < len(vecindades[punto][1]) + 1:
