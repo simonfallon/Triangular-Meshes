@@ -29,6 +29,9 @@ for tri in readtxt2list(ARCHIVO2):  # Triangulos a tupal de puntos t = ((x1,y1,z
 # con pi = (xi,yi,zi)
 # Dictionario de puntos p : ({p,p1,p2...},{(p,p2,p3),(p,p3,p4)...})
 # Diccionario entra punto, sale tupla con primero, los puntos en el vecindario y en segundo indice triangulos en vecindario
+def frontera(self,punto):
+    return not len(self.vecindades[punto][0]) == len(self.vecindades[punto][1]) + 1
+
 
 def irreg(punto):
     if len(vecindades[punto][0]) < len(vecindades[punto][1]) + 1:

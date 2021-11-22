@@ -17,13 +17,14 @@ noPosibles = []
 puntos = []
 
 triangulosquitados = set()
+triangulos = set()
+
 
 for punto in readtxt2list(ARCHIVO1): #Points to tuple of p values = (x,y,z)
     pto = tuple([float(i) for i in punto.split(',')])
     puntos.append(pto)
 puntosiniciales = puntos.copy()
 
-triangulos = set()
 for tri in readtxt2list(ARCHIVO2): #Triangles to tuple of points t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
     triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
 

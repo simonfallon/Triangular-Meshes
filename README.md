@@ -5,11 +5,11 @@ It is often useful to reduce the mesh i.e. to reduce the amount of triangles tha
 
 All three variations of the original algorithm follow the same Greedy-aproach. We follow greedely the order given by a priority queue wich tells us which triagle´s removal would have the smallest effect on the objects form. Then repeat iteratively until a given amount of triangles are removed or until the new mesh differs from the original one within a tolerance limit, which we meassure with the Hausdorff-Distance.
 
-###TriangularMeshMaxd.py
+### TriangularMeshMaxd.py
 
 The first variation "TriangularMeshMaxd.py" sorts the priority queue by the maximal Diehedral angle that is formed by each triangle.
 
-###TriangularMeshMinD.py
+### TriangularMeshMinD.py
 
 The second variation "TriangularMeshMinD.py" follows the same logic, but it takes the minimal Diehedral angle.
 
