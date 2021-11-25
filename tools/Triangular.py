@@ -61,7 +61,7 @@ class TriangularMeshMaxD(Triangular):
     def __init__(self,file1:str,file2:str):
         super().__init__(file1,file2)       
         # Retorna minimo angulo dihedrales de vecindad.
-    def maxAnguloD(punto):
+    def maxAnguloD(self,punto):
         vecindad = supervecindades[punto]
         # Se crea una lista con tuplas de los triangulos adyacentes
         tri_adyacentes = list(
@@ -77,4 +77,23 @@ class TriangularMeshMaxD(Triangular):
             ang = np.math.acos(np.dot(plano1, plano2) / (np.linalg.norm(plano1) * np.linalg.norm(plano2)))
             maxang = min(maxang, ang)
         return maxang
-       
+
+class TriangularMeshMinD(Triangular):
+    def __init__(self,file1:str,file2:str):
+        super().__init__(file1,file2)
+    def minanguloD(self,punto):
+        vecindad = vecindades[punto]
+        # Se crea una lista con tuplas de los triangulos adyacentes
+        tri_adyacentes = list(
+            filter(lambda par: len(set(par[0]).intersection(set(par[1]))) == 2, list(combinations(vecindad[1], 2))))
+        minang = 4;
+        for par in tri_adyacentes:
+            inter = list(set(par[0]).intersection(set(par[1])))
+            vecI = np.asarray(inter[1]) - np.asarray(inter[0])
+            vec1 = np.asarray(list(set(par[0]).difference(set(inter)))[0]) - np.asarray(inter[0])
+            vec2 = np.asarray(list(set(par[1]).difference(set(inter)))[0]) - np.asarray(inter[0])
+            plano1 = np.cross(vecI, vec1)
+            plano2 = np.cross(vecI, vec2)
+            ang = np.math.acos(np.dot(plano1, plano2) / (np.linalg.norm(plano1) * np.linalg.norm(plano2)))
+            minang = min(minang, ang)
+        return minang
