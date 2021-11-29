@@ -1,25 +1,28 @@
-# Triangular-Meshes
-This repository contains a project which consists of three variations of algorithms to reduce triangular meshes
-A triangular mesh is a very common way to represent 3-Dimensional Objects in computer graphics. In this simplification 3-dimensional surfaces are reduced to a set of adjacent triangles in the 3-D Space.
-It is often useful to reduce the mesh i.e. to reduce the amount of triangles that are used to represent the object without losing its geometrical and topological atributes, so that algorithms and computation procedures on this object can be faster.
+# Triangular-Meshes en español
 
-All three variations of the original algorithm follow the same Greedy-aproach. We follow greedely the order given by a priority queue wich tells us which triagle´s removal would have the smallest effect on the objects form. Then repeat iteratively until a given amount of triangles are removed or until the new mesh differs from the original one within a tolerance limit, which we meassure with the Hausdorff-Distance.
+Una malla triangular es una forma muy común de representar objetos 3d en computacion grafica. En esta simplificación, las superficies 3D se reducen a un conjunto de triángulos adyacentes en el espacio tridimensional.
+
+A menudo es útil reducir la malla, es decir, reducir la cantidad de triángulos que se utilizan para representar el objeto sin perder sus atributos geométricos y topológicos, de modo que los algoritmos y procedimientos de cálculo sobre este objeto puedan ser más rápidos.
+
+Las tres variaciones del algoritmo original siguen el mismo enfoque ["Greedy-aproach"](https://www.sciencedirect.com/topics/engineering/greedy-approach). Seguimos greedely el orden dado por una cola de prioridad que nos dice que la eliminación de triángulos tendría el menor efecto en la forma de los objetos. 
+
+Luego se repite iterativamente hasta que se elimina una cantidad determinada de triángulos o hasta que la nueva malla difiere de la original dentro de un límite de tolerancia, que medimos con la distancia de Hausdorff.
 
 ### TriangularMeshMaxd.py
 
-The first variation "TriangularMeshMaxd.py" sorts the priority queue by the maximal Diehedral angle that is formed by each triangle.
+La primera variación "TriangularMeshMaxd.py" ordena la cola de prioridades por el [angulo diedro](https://www.sciencedirect.com/topics/chemistry/dihedral-angle) máximo que forma cada triángulo.
 
 ### TriangularMeshMinD.py
 
-The second variation "TriangularMeshMinD.py" follows the same logic, but it takes the minimal Diehedral angle.
+La segunda variación "TriangularMeshMinD.py" sigue la misma lógica, pero toma el mínimo ángulo diedro.
 
 ### TriangularMeshQF.py
 
-The third and most elaborated one "TriangularMeshQF" sorts the priority queue by the triangle´s Quality Functional, Which is a function that takes the triangle´s roundness (R), the curvature (H) and the local error caused by its removal (E). This function can be calibrated with three parameters fot R,H,E that depend on the type of object the mesh is representing, so that the reduction will keep its geometrical and topological atributes. 
+La tercera y más elaborada "TriangularMeshQF" ordena la cola de prioridades por la Función de Calidad del triángulo, que es una función que toma la redondez del triángulo (R), la curvatura (H) y el error local causado por su eliminación (E). Esta función puede calibrarse con tres parámetros R,H,E que dependen del tipo de objeto que representa la malla, para que la reducción mantenga sus atributos geométricos y topológicos. 
 
-## run 
+## Ejecutar 
 
-you can run one by one ,like:
+puede correr uno por uno, de la siguiente forma:
 
 **TriangularMeshMaxd**
 
@@ -33,6 +36,6 @@ you can run one by one ,like:
 
 	python TriangularMeshQF.py
 
-or use main.py
+o use main.py
 
 	python main.py

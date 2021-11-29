@@ -9,9 +9,9 @@ class Triangular():
 
     def __init__(self,file1:str,file2:str):
         for punto in readtxt2list(file1):  # Puntos a tupla de valores p = (x,y,z)
-            pto = tuple([float(i) for i in punto.split(',')])
-            self.puntos.append(pto)
-
+            #pto = tuple([float(i) for i in punto.split(',')])
+            self.puntos.append([float(i) for i in punto])
+            #considerar     puntos.append(punto)
         for tri in readtxt2list(file2):  # Triangulos a tupal de puntos t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
             self.triangulos.add(tuple([self.puntos[int(i) - 1] for i in tri.split(',')]))
         self.puntosiniciales = puntos.copy()
@@ -59,7 +59,7 @@ class Triangular():
 
 class TriangularMeshMaxD(Triangular):
     def __init__(self,file1:str,file2:str):
-        super().__init__(file1,file2)       
+        super().__init__(file1,file2,self)       
         # Retorna minimo angulo dihedrales de vecindad.
     def maxAnguloD(self,punto):
         vecindad = supervecindades[punto]
@@ -80,7 +80,7 @@ class TriangularMeshMaxD(Triangular):
 
 class TriangularMeshMinD(Triangular):
     def __init__(self,file1:str,file2:str):
-        super().__init__(file1,file2)
+        super().__init__(file1,file2,self)
     def minanguloD(self,punto):
         vecindad = vecindades[punto]
         # Se crea una lista con tuplas de los triangulos adyacentes
@@ -97,3 +97,97 @@ class TriangularMeshMinD(Triangular):
             ang = np.math.acos(np.dot(plano1, plano2) / (np.linalg.norm(plano1) * np.linalg.norm(plano2)))
             minang = min(minang, ang)
         return minang
+class TriangularMeshesQF(Triangular):
+    def __init__(self,file1:str,file2:str):
+        super().__init__(file1,file2,self)
+
+def areaHeron(tri):
+    A = np.array(tri[0])
+    B = np.array(tri[1])
+    C = np.array(tri[2])
+    a = np.linalg.norm(B-C)
+    b = np.linalg.norm(A-C)
+    c = np.linalg.norm(A-B)
+    s = (a+b+c)/2
+    return np.sqrt(s*(s-a)*(s-b)*(s-c))
+
+def perimeter(tri):
+    A = np.array(tri[0])
+    B = np.array(tri[1])
+    C = np.array(tri[2])
+    a = np.linalg.norm(B-C)
+    b = np.linalg.norm(A-C)
+    c = np.linalg.norm(A-B)
+    return(a+b+c)
+ 
+def rInCircle(tri):
+    return areaHeron(tri)/(0.5*perimeter(tri))    
+
+def redondez(tri):
+    A = np.array(tri[0])
+    B = np.array(tri[1])
+    C = np.array(tri[2])
+    a = np.linalg.norm(B-C)
+    b = np.linalg.norm(A-C)
+    c = np.linalg.norm(A-B)
+    ladoMax = max(a,b,c)
+    return rInCircle(tri)/ladoMax
+
+def R(punto):
+    ans =0
+    vecindad = vecindades [punto][1]
+    tam = len(vecindad)
+    for t in vecindad:
+        ans += redondez(t)
+    return ans/tam
+
+def anguloD(t1, t2):
+    A = np.array(t1[0])
+    B = np.array(t1[1])
+    C = np.array(t1[2])
+    v1 = B-A
+    v2 = C-A
+    n1 = np.cross(v1, v2)
+    
+    D = np.array(t2[0])
+    E = np.array(t2[1])
+    F = np.array(t2[2])
+    v3 = E-D
+    v4 = F-D
+    n2 = np.cross(v3, v4)
+    ang = np.arccos(abs(np.dot(n1, n2))/(np.linalg.norm(n1)*np.linalg.norm(n2)))/100
+    return ang
+    
+def H(punto):
+    ans =0
+    vecindad = vecindades [punto][1]
+    for t1 in vecindad:
+        for t2 in vecindad:
+            a1 = set(t1)
+            a2 = set(t2)
+            if len(a1.intersection(a2))==2:
+                ans += anguloD(t1, t2)
+    return ans
+"""
+#testing
+class testing():
+    def __init__(self, arg):
+        filepath="../data"
+        file1=filepath+"triangulos/Tgs_conejo.txt"
+        file2=filepath+"puntos/Pts_conejo.txt"
+    def TriangularMeshMinD(self):
+        t=Triangular(file1,file2)
+        t
+    def TriangularMeshMinD(self):
+        pass
+test=testing()
+test.
+"""
+def testing():
+    filepath="../data"
+    file1=filepath+"triangulos/Tgs_conejo.txt"
+    file2=filepath+"puntos/Pts_conejo.txt"
+    t=Triangular(file1,file2)
+    tmax=TriangularMeshMaxD(file1,file2)
+    tmin=TriangularMeshMinD(file1,file2)
+    tqf=TriangularMeshesQF(file1,file2)
