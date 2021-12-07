@@ -1,14 +1,22 @@
 # from MetodosVisualizacion import *
-import tools.Plot
+from tools import Plot
 from tools.Tools import readtxt2list
-from tools.Triangular import frontera
+#from tools.Triangular import frontera
 import numpy as np
 from itertools import combinations
 from operator import itemgetter
 import scipy.optimize as op
 
-ARCHIVO1="ptsbunny.txt"
-ARCHIVO2="tbunny.txt"
+NOMBRE1="Pts_esfera.txt"
+NOMBRE2="Tgs_esfera.txt"
+
+COPIA1="data/generaciones/copia_"+NOMBRE1
+COPIA2="data/generaciones/copia_"+NOMBRE2
+
+ARCHIVO1="data/puntos/"+NOMBRE1
+ARCHIVO2="data/triangulos/"+NOMBRE2
+
+CARACTER_SEPARACION = '\t'
 
 puntos_cent = []
 vecindades = {}
@@ -20,18 +28,18 @@ triangulosquitados = set()
 triangulos = set()
 
 for punto in readtxt2list(ARCHIVO1):  # Puntos a tupla de valores p = (x,y,z)
-    pto = tuple([float(i) for i in punto.split(',')])
+    pto = tuple([float(i) for i in punto.split(CARACTER_SEPARACION)])
     puntos.append(pto)
 puntosiniciales = puntos.copy()
 
 for tri in readtxt2list(ARCHIVO2):  # Triangulos a tupal de puntos t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
-    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
+    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(CARACTER_SEPARACION)]))
 
 # con pi = (xi,yi,zi)
 # Dictionario de puntos p : ({p,p1,p2...},{(p,p2,p3),(p,p3,p4)...})
 # Diccionario entra punto, sale tupla con primero, los puntos en el vecindario y en segundo indice triangulos en vecindario
-def frontera(self,punto):
-    return not len(self.vecindades[punto][0]) == len(self.vecindades[punto][1]) + 1
+def frontera(punto):
+    return not len(vecindades[punto][0]) == len(vecindades[punto][1]) + 1
 
 def irreg(punto):
     if len(vecindades[punto][0]) < len(vecindades[punto][1]) + 1:
@@ -239,7 +247,7 @@ def quitar():
         print(i-len(noPosibles))
         print(nquitados)
         if nquitados%500 == 0:
-            Plot.plotmalla(puntos, triangulos)
+            #Plot.plotmalla(puntos, triangulos)
             savemesh('bunny'+str(nquitados))
         try:
             removepoint(angdict[0][0])

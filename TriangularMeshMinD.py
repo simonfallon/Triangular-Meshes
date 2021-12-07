@@ -1,14 +1,14 @@
 # from MetodosVisualizacion import *
 import tools.Plot
 from tools.Tools import readtxt2list
-from tools.Triangular import frontera
+#from tools.Triangular import frontera
 import numpy as np
 from itertools import combinations
 from operator import itemgetter
 import scipy.optimize as op
 
-ARCHIVO1="ptsbunny.txt"
-ARCHIVO2="tbunny.txt"
+ARCHIVO1="data/puntos/Pts_conejo.txt"
+ARCHIVO2="data/triangulos/Tgs_conejo.txt"
 
 puntos_cent = []
 vecindades = {}
@@ -29,9 +29,8 @@ for tri in readtxt2list(ARCHIVO2):  # Triangulos a tupal de puntos t = ((x1,y1,z
 # con pi = (xi,yi,zi)
 # Dictionario de puntos p : ({p,p1,p2...},{(p,p2,p3),(p,p3,p4)...})
 # Diccionario entra punto, sale tupla con primero, los puntos en el vecindario y en segundo indice triangulos en vecindario
-def frontera(self,punto):
-    return not len(self.vecindades[punto][0]) == len(self.vecindades[punto][1]) + 1
-
+def frontera(punto):
+    return not len(vecindades[punto][0]) == len(vecindades[punto][1]) + 1
 
 def irreg(punto):
     if len(vecindades[punto][0]) < len(vecindades[punto][1]) + 1:
@@ -49,7 +48,6 @@ def crearvecindades():
                 vecindades[punto][1].add(tri)
     puntos_cent.clear()
     puntos_cent.extend(list(filter(lambda punto: frontera(punto) == False, puntos)))
-
 
 crearvecindades()
 
