@@ -7,8 +7,16 @@ from itertools import combinations
 from operator import itemgetter
 import scipy.optimize as op
 
-ARCHIVO1="data/puntos/Pts_conejo.txt"
-ARCHIVO2="data/triangulos/Tgs_conejo.txt"
+NOMBRE1="Pts_esfera.txt"
+NOMBRE2="Tgs_esfera.txt"
+
+COPIA1="data/generaciones/copia_"+NOMBRE1
+COPIA2="data/generaciones/copia_"+NOMBRE2
+
+ARCHIVO1="data/puntos/"+NOMBRE1
+ARCHIVO2="data/triangulos/"+NOMBRE2
+
+CARACTER_SEPARACION = '\t'#se podria automatisar , cogiendo el primer caracter que no sea un numero ni un punto
 
 puntos_cent = []
 vecindades = {}
@@ -20,11 +28,11 @@ triangulosquitados = set()
 triangulos = set()
 
 for punto in readtxt2list(ARCHIVO1):  # Puntos a tupla de valores p = (x,y,z)
-    pto = tuple([float(i) for i in punto.split(',')])
+    pto = tuple([float(i) for i in punto.split(CARACTER_SEPARACION)])
     puntos.append(pto)
 
 for tri in readtxt2list(ARCHIVO2):  # Triangulos a tupal de puntos t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
-    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
+    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(CARACTER_SEPARACION)]))
 
 # con pi = (xi,yi,zi)
 # Dictionario de puntos p : ({p,p1,p2...},{(p,p2,p3),(p,p3,p4)...})
