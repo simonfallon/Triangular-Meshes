@@ -7,8 +7,13 @@ from itertools import combinations
 from operator import itemgetter
 import scipy.optimize as op
 
-ARCHIVO1="3pts.txt"
-ARCHIVO2="3tgs.txt"
+NOMBRE1="Pts_esfera.txt"
+NOMBRE2="Tgs_esfera.txt"
+
+ARCHIVO1="data/puntos/"+NOMBRE1
+ARCHIVO2="data/triangulos/"+NOMBRE2
+
+CARACTER_SEPARACION = '\t'#se podria automatisar , cogiendo el primer caracter que no sea un numero ni un punto
 
 puntos_cent = []
 vecindades = {}
@@ -21,12 +26,12 @@ triangulos = set()
 
 
 for punto in readtxt2list(ARCHIVO1): #Points to tuple of p values = (x,y,z)
-    pto = tuple([float(i) for i in punto.split(',')])
+    pto = tuple([float(i) for i in punto.split(CARACTER_SEPARACION)])
     puntos.append(pto)
 puntosiniciales = puntos.copy()
 
 for tri in readtxt2list(ARCHIVO2): #Triangles to tuple of points t = ((x1,y1,z1),(x2,y2,z2),(x3,y3,z3)
-    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(',')]))
+    triangulos.add(tuple([puntos[int(i) - 1] for i in tri.split(CARACTER_SEPARACION)]))
 
 
 # with pi = (xi,yi,zi)

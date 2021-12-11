@@ -1,9 +1,13 @@
 import numpy as np
-import Plot
-from Tools import readtxt2list,writetxt
+try:#si se corre desde el main
+    from tools import Plot
+    from tools.Tools import readtxt2list,writetxt
+except:#si se corre desde triangular.py
+    import Plot
+    from Tools import readtxt2list,writetxt
 from itertools import combinations
 from operator import itemgetter
-#import scipy.optimize as op
+import scipy.optimize as op
 class Triangular():
     puntos_cent = []
     vecindades = {}
@@ -139,19 +143,16 @@ class Triangular():
                     continue
         raise Exception('No se Puede Triangular')
 
-    def savemesh(self,name="copia",folder="../data/generaciones"):
+    def savemesh(self,folder="data/generaciones",name="copia"):
         #print(file1)
         tri = list(map(lambda tri: str(self.puntos.index(tri[0])+1)+','+str(self.puntos.index(tri[1])+1)+','+str(self.puntos.index(tri[2])+1)+'\n', self.triangulos))
         pts = list(map(lambda pt: str(pt[0])+','+str(pt[1])+','+str(pt[2])+'\n', self.puntos))
         writetxt(folder+"/Pts_"+name+".txt",pts)
         writetxt(folder+"/Tgs_"+name+".txt",tri)
         """
+        se penso en tomar los nombres mediante slicing de strings, pero daba un error por self.file
         pos1=self.file1.index("/",len(self.file1)-self.file1[::-1].index("/")-1)
-        pos2=self.file2.index("/",len(self.file2)-self.file2[::-1].index("/")-1)        
-        filepts = open(folder+name+file1[pos:], "w+")
-        filet = open(folder+name+file2[pos:], "w+")
-        filet.writelines(tri)
-        filepts.writelines(pts)
+        pos2=self.file2.index("/",len(self.file2)-self.file2[::-1].index("/")-1) 
         """
 
     def quitar(self):
@@ -162,14 +163,16 @@ class Triangular():
             print(i-len(self.noPosibles))
             print(nquitados)
             if nquitados%500 == 0:
-                self.savemesh()
+                try:#desde el main
+                    self.savemesh()
+                except:#desde este archivos
+                    self.savemesh(folder="../data/generaciones")
             try:
                 removepoint(self.angdict[0][0])
                 nquitados += 1;
             except:
                 print('No fue posible quitar el punto : ',self.angdict[0][0])
         Plot.plotmalla(self.puntos, self.triangulos)
-
 
     def mirarpuntos(vec):
         puntos = list(vec[0])
@@ -227,17 +230,6 @@ class Triangular():
     def resultado(self):
         print("La distancia Hausdorff entre la malla original y la reducida es: ",self.hausdorff(self.puntos, self.puntosiniciales))
         Plot.plotmalla(self.puntos,self.triangulos)
-
-"""
-listaquitar()
-print(len(angdict))
-quitar()
-print("La distancia Hausdorff entre la malla original y la reducida es: ",hausdorff(puntos, puntosiniciales))
-Plot.plotmalla(puntos, triangulos)
-"""
-class TriangularMeshMaxD(Triangular):
-    def __init__(self,file1:str,file2:str):
-        super().__init__(file1,file2)       
     def maxAnguloD(self,punto):
         vecindad = self.vecindades[punto]
         # Se crea una lista con tuplas de los triangulos adyacentes
@@ -263,35 +255,15 @@ class TriangularMeshMaxD(Triangular):
                 if i[0] == punto:
                     self.angdict.remove(i)
 
+class TriangularMeshMaxD(Triangular):
+    def __init__(self,file1:str,file2:str):
+        super().__init__(file1,file2)       
+    
+
 class TriangularMeshMinD(Triangular):
     def __init__(self,file1:str,file2:str):
         super().__init__(file1,file2)
-    def minanguloD(self,punto):
-        vecindad = self.vecindades[punto]
-        # Se crea una lista con tuplas de los triangulos adyacentes
-        tri_adyacentes = list(
-            filter(lambda par: len(set(par[0]).intersection(set(par[1]))) == 2, list(combinations(vecindad[1], 2))))
-        minang = 4;
-        for par in tri_adyacentes:
-            inter = list(set(par[0]).intersection(set(par[1])))
-            vecI = np.asarray(inter[1]) - np.asarray(inter[0])
-            vec1 = np.asarray(list(set(par[0]).difference(set(inter)))[0]) - np.asarray(inter[0])
-            vec2 = np.asarray(list(set(par[1]).difference(set(inter)))[0]) - np.asarray(inter[0])
-            plano1 = np.cross(vecI, vec1)
-            plano2 = np.cross(vecI, vec2)
-            ang = np.math.acos(np.dot(plano1, plano2) / (np.linalg.norm(plano1) * np.linalg.norm(plano2)))
-            minang = min(minang, ang)
-        return minang
-    def listaquitar(self):
-        global angdict
-        angdict = []
-        for punto in self.puntos_cent:
-            angdict.append((punto, self.minanguloD(punto)))
-        self.angdict = sorted(angdict, key=itemgetter(1),reverse=True)
-        for punto in self.noPosibles:
-            for i in self.angdict:
-                if i[0] == punto:
-                    self.angdict.remove(i)
+
 class TriangularMeshesQF(Triangular):
     funcionalDC=[]
     def __init__(self,file1:str,file2:str):
@@ -425,7 +397,7 @@ class TriangularMeshesQF(Triangular):
             for i in self.angdict:
                 if i[0] == punto:
                     self.angdict.remove(i)
-
+"""
 def testingTmax():
     filepath="../data/"
     file1=filepath+"puntos/Pts_esfera.txt"
@@ -452,13 +424,14 @@ def testingTqf():
     filepath="../data/"
     file1=filepath+"puntos/Pts_plano.txt"
     file2=filepath+"triangulos/Tgs_plano.txt"
-    tqf=TriangularMeshesQF(file1,file2)
-    tqf.crearvecindades()
-    tqf.listaquitar()
-    print(len(tqf.funcionalDC))
-    print(len(tqf.angdict))
-    tqf.quitar()
-    tqf.resultado()
+    tmQF=TriangularMeshesQF(file1,file2)
+    tmQF.crearvecindades()
+    tmQF.listaquitar()
+    print(len(tmQF.funcionalDC))
+    print(len(tmQF.angdict))
+    tmQF.quitar()
+    tmQF.resultado()
+"""
 """
     file1=filepath+"puntos/Pts_plano.txt"
     file2=filepath+"triangulos/Tgs_plano.txt"
@@ -472,4 +445,4 @@ def testingTqf():
 
 #testingTmax()
 #testingTmin()
-testingTqf()
+#testingTqf()

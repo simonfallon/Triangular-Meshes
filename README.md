@@ -36,3 +36,7 @@ you can run one by one ,like:
 or use main.py
 
 	python main.py
+
+### Screenshots
+![sphere](https://github.com/jero98772/Triangular-Meshes/blob/master/docs/screenshots/1.png?raw=true)
+![plane](https://github.com/jero98772/Triangular-Meshes/blob/master/docs/screenshots/2.png?raw=true)

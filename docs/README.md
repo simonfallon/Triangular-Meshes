@@ -39,3 +39,8 @@ puede correr uno por uno, de la siguiente forma:
 o use main.py
 
 	python main.py
+
+
+### Fotos
+![sphere](https://github.com/jero98772/Triangular-Meshes/blob/master/docs/screenshots/1.png?raw=true)
+![plane](https://github.com/jero98772/Triangular-Meshes/blob/master/docs/screenshots/2.png?raw=true)
