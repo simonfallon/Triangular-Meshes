@@ -7,14 +7,22 @@ except:#si se corre desde triangular.py
     from Tools import readtxt2list,writetxt
 from itertools import combinations
 from operator import itemgetter
+from collections import deque
 import scipy.optimize as op
 class Triangular():
+    """
     puntos_cent = []
-    vecindades = {}
     puntos_irreg = []
     noPosibles = []
     puntos = []
     angdict = []
+    """
+    puntos_cent = deque()
+    puntos_irreg = deque()
+    noPosibles = deque()
+    puntos = deque()
+    angdict = deque()
+    vecindades = {}
     triangulosquitados = set()
     triangulos = set()
     CARACTER_SEPARACION = '\t'
@@ -31,7 +39,8 @@ class Triangular():
     # no se usa irreg
     def irreg(punto):
         if len(self.vecindades[punto][0]) < len(self.vecindades[punto][1]) + 1:
-            print(punto)
+            pass
+            #print(punto)
         return len(self.vecindades[punto][0]) < len(self.vecindades[punto][1]) + 1
     
     def crearvecindades(self):
@@ -84,22 +93,22 @@ class Triangular():
             for pt in vec[0]:
                     triaux.update(vecindades[pt][1])
                     puntosaux.update(vecindades[pt][0])
-            #Plot.plotmalla(list(puntosaux), triaux)
+            Plot.plotmalla(list(puntosaux), triaux)
             triaux.difference_update(vec[1])
             triaux.update(triang(polygon))
-            #Plot.plotmalla(list(puntosaux),triaux)
+            Plot.plotmalla(list(puntosaux),triaux)
             triangulos.update(triang(polygon))
             triangulos.difference_update(vec[1])
             puntos.remove(punto)
             crearvecindades()
             listaquitar()
         except Exception as ex:
-            #Plot.plotmalla(list(puntosaux), triaux)
-            #Plot.plotmalla(list(vec[0]),vec[1])
+            Plot.plotmalla(list(puntosaux), triaux)
+            Plot.plotmalla(list(vec[0]),vec[1])
             self.noPosibles.append(punto)
             self.listaquitar()
-            print(ex.with_traceback())
-            print('No fue posible quitar el punto : ',punto)
+            #print(ex.with_traceback())
+            #print('No fue posible quitar el punto : ',punto)
 
     def triang(polygon):
         if len(polygon)==0:
@@ -138,8 +147,8 @@ class Triangular():
                 try:
                     return triang(p1)+triang(p2)
                 except Exception as ex:
-                    print(indxs)
-                    print(ex)
+                    #print(indxs)
+                    #print(ex)
                     continue
         raise Exception('No se Puede Triangular')
 
@@ -157,11 +166,11 @@ class Triangular():
 
     def quitar(self):
         numquitar = 200
-        print("Se intentaran quitar", numquitar, "puntos", 'de', len(self.angdict))
+        #print("Se intentaran quitar", numquitar, "puntos", 'de', len(self.angdict))
         nquitados = 0;
         for i in range(0,numquitar):
-            print(i-len(self.noPosibles))
-            print(nquitados)
+            #print(i-len(self.noPosibles))
+            #print(nquitados)
             if nquitados%500 == 0:
                 try:#desde el main
                     self.savemesh()
@@ -171,7 +180,8 @@ class Triangular():
                 removepoint(self.angdict[0][0])
                 nquitados += 1;
             except:
-                print('No fue posible quitar el punto : ',self.angdict[0][0])
+                pass
+                #print('No fue posible quitar el punto : ',self.angdict[0][0])
         Plot.plotmalla(self.puntos, self.triangulos)
 
     def mirarpuntos(vec):
@@ -228,7 +238,8 @@ class Triangular():
         vn = v[minW]
         return vn 
     def resultado(self):
-        print("La distancia Hausdorff entre la malla original y la reducida es: ",self.hausdorff(self.puntos, self.puntosiniciales))
+        pass
+        #print("La distancia Hausdorff entre la malla original y la reducida es: ",self.hausdorff(self.puntos, self.puntosiniciales))
         Plot.plotmalla(self.puntos,self.triangulos)
     def maxAnguloD(self,punto):
         vecindad = self.vecindades[punto]
